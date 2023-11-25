@@ -1,15 +1,16 @@
 Tiny Profiler
 =============
 
-A tiny CPU profiler for Java written completely in Java 17.
+A tiny CPU profiler for Java written completely in Java 11.
 
-This is an educational sampling profiler that helps demystify profilers, but is not limited to it.
+This is an educational sampling profiler from Johannes Bechberger that helps demystify profilers, but is not limited to it.
+The changes I have made here are exclusively to the operability of the profiler with Java 11.
  
 This profiler is a sampling profiler with can output method tables and 
 flame graphs (via [d3-flame-graph](https://github.com/spiermar/d3-flame-graph)).
 The sampling is based on the `Thread.getAllStackTraces()` method, making it simple but also safepoint-biased.
 
-The profiler should work on any platform with a JDK 17 or newer. The usage is fairly simple:
+The profiler should work on any platform with a JDK 11 or newer. The usage is fairly simple:
 
 ```sh
 # build it
@@ -68,6 +69,7 @@ Structure
 - Options: Parses and stores the agent options
 - Profiler: Contains the profiling loop
 - Store: Stores and outputs the collected results
+- MethodTableEntry: Replacement of record for Java 11
 
 License
 -------
