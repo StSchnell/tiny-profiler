@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 /**
  * store of the traces
@@ -57,27 +57,24 @@ public class Store {
         }
 
         public void writeAsHTML(PrintStream s, int maxDepth) {
-            s.print("""
-                    <head>
-                      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
-                      <link rel="stylesheet" type="text/css" href="misc/d3-flamegraph.css">
-                    </head>
-                    <body>
-                      <div id="chart"></div>
-                      <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
-                      <script type="text/javascript" src="misc/d3.v7.js"></script>
-                      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.js"></script>
-                      <script type="text/javascript" src="misc/d3-flamegraph.js"></script>
-                      <script type="text/javascript">
-                      var chart = flamegraph().width(window.innerWidth);
-                      d3.select("#chart").datum(""");
+            s.print("<head>" +
+                    "  <link rel=\"stylesheet\" type=\"text/css\" href=\"https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css\">" +
+                    "  <link rel=\"stylesheet\" type=\"text/css\" href=\"misc/d3-flamegraph.css\">" +
+                    "</head>" +
+                    "<body>" +
+                    "  <div id=\"chart\"></div>" +
+                    "  <script type=\"text/javascript\" src=\"https://d3js.org/d3.v7.js\"></script>" +
+                    "  <script type=\"text/javascript\" src=\"misc/d3.v7.js\"></script>" +
+                    "  <script type=\"text/javascript\" src=\"https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.js\"></script>" +
+                    "  <script type=\"text/javascript\" src=\"misc/d3-flamegraph.js\"></script>" +
+                    "  <script type=\"text/javascript\">" +
+                    "  var chart = flamegraph().width(window.innerWidth);" +
+                    "  d3.select(\"#chart\").datum(");
             writeAsJson(s, maxDepth);
-            s.print("""
-                    ).call(chart);
-                      window.onresize = () => chart.width(window.innerWidth);
-                      </script>
-                    </body>
-                    """);
+            s.print(").call(chart);" +
+                    "  window.onresize = () => chart.width(window.innerWidth);" +
+                    "  </script>" +
+                    "</body>");
         }
     }
 
@@ -119,15 +116,12 @@ public class Store {
     }
 
     public void addSample(StackTraceElement[] stackTraceElements) {
-        List<String> trace = Stream.of(stackTraceElements).map(this::flattenStackTraceElement).toList();
+        List<String> trace = Stream.of(stackTraceElements).map(this::flattenStackTraceElement).collect(Collectors.toList());
         updateMethodTables(trace);
         if (flamePath.isPresent()) {
             rootNode.addTrace(trace);
         }
         totalSampleCount++;
-    }
-
-    private record MethodTableEntry(String method, long sampleCount, long onTopSampleCount) {
     }
 
     private void printMethodTable(PrintStream s, List<MethodTableEntry> sortedEntries) {
@@ -147,7 +141,7 @@ public class Store {
         List<MethodTableEntry> methodTable =
                 methodSampleCount.entrySet().stream().map(entry -> new MethodTableEntry(entry.getKey(),
                         entry.getValue(), methodOnTopSampleCount.getOrDefault(entry.getKey(), 0L)))
-                        .sorted((a, b) -> Long.compare(b.sampleCount, a.sampleCount)).toList();
+                        .sorted((a, b) -> Long.compare(b.sampleCount, a.sampleCount)).collect(Collectors.toList());
         printMethodTable(System.out, methodTable);
     }
 
