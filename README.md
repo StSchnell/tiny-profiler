@@ -4,6 +4,7 @@ Tiny Profiler
 A tiny CPU profiler for Java written completely in Java 11.
 
 This is an educational sampling profiler from Johannes Bechberger that helps demystify profilers, but is not limited to it.
+
 The changes I have made here are exclusively to the operability of the profiler with Java 11.
  
 This profiler is a sampling profiler with can output method tables and 
