@@ -20,14 +20,14 @@ public class Options {
     private boolean printMethodTable = true;
 
     private void printHelp() {
-        System.out.println("""
-                Usage: java -javaagent:tiny-profiler.jar=options ...
-                Options:
-                    help: Print this help message
-                    interval: The interval in milliseconds between samples (default: 10)
-                    flamegraph: The path to the output file (default: no output)
-                    table: Print the method table? (default: true)
-                """);
+        System.out.println("Usage: java -javaagent:tiny-profiler.jar=options ...\n" +
+                "Options:\n" +
+                "    help: Print this help message\n" +
+                "    interval: The interval in milliseconds between samples (default: 10)\n" +
+                "    flamegraph: The path to the output file (default: no output)\n" +
+                "    table: Print the method table? (default: true)");
+
+
     }
 
     private void optionsError(String msg) {
@@ -48,11 +48,11 @@ public class Options {
             String key = kv[0];
             String value = kv[1];
             switch (key) {
-                case "help" -> printHelp();
-                case "interval" -> interval = Duration.ofNanos((long) (Double.parseDouble(value) * 1000000));
-                case "flamegraph" -> flamePath = Optional.of(Path.of(value));
-                case "table" -> printMethodTable = Boolean.parseBoolean(value);
-                default -> optionsError("Unknown argument: " + key);
+                case "help" : printHelp(); break;
+                case "interval" : interval = Duration.ofNanos((long) (Double.parseDouble(value) * 1000000)); break;
+                case "flamegraph" : flamePath = Optional.of(Path.of(value)); break;
+                case "table" : printMethodTable = Boolean.parseBoolean(value); break;
+                default : optionsError("Unknown argument: " + key); break;
             }
         }
     }
